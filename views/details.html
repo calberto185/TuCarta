@@ -1,0 +1,130 @@
+<div >
+	<header  style="position: absolute;"></header>
+	  <!-- <div style="background-color: rgba(0,0,0,0.7); display: inline-flex; position: fixed; z-index: 54564;  width: 100vw; height: 60px;" layout="row" flex>
+	  	<div layout="row" layout-align="center center" flex>
+	      	<img  ng-src="images/logo.svg"  class="md-avatar" alt="avatar" style="width: 60px; height: 60px; margin-left: 10px;">
+	  		<span hide-xs class="md-title" style="color: #fff;">TU CARTA</span>
+	  	</div>
+	    <span  flex></span>
+	    <div hide-xs layout="row"  class="md-toolbar-tools-bottom inset">
+	      <span></span>
+	      <div>
+	      </div>
+	    </div>
+	    <span hide-xs flex></span> -->
+
+	    <!-- <div layout="row" layout-align="center center"  style="margin-right: 20px;">
+			<md-input-container class="search" layout="row"  ng-keypress="viewSearch()" flex layout-align="center center">
+				<label class="md-caption">Busca tu Platillo</label>
+				<input type="text" name="search" ng-model="searching">
+			</md-input-container>
+			<div flex="nogrow">
+				<md-button class="md-icon-button" aria-label="search" ng-click="searching=''">
+					<ng-md-icon icon="search" style="fill:#fff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+				</md-button>
+			</div>
+	    </div> -->
+
+		<!--   <div layout="column" layout-align="center stretch"  style="margin-right: 20px;">
+			<md-button class="alert" aria-label="closed message" ng-click="login()" style="color: #fff;">Iniciar Sesión</md-button>
+		  </div>
+	  </div> -->
+
+	<div style="position: relative;">
+		<slick class="autoplayHome-3" init-onload=true style="background-image: url('images/pexels-photo-64208.jpeg'); ">
+			<img src="images/galeria/{{img.font || 'ring.svg'}}" alt="font - {{$index}}" ng-repeat="img in galeria" style="height: 440px; width: 380px;">
+		</slick>
+	</div>
+	<div layout="row" layout-align="center center" layout-align-sm="center stretch" layout-align-xs="center stretch"  flex style="position: relative; top: -70px;">
+
+		<div layout="row" layout-align="center none" layout-align-sm="center stretch" layout-align-xs="center stretch" flex="80" flex-sm="100" flex-xs="100" style=" padding-top: 50px; background:white; border-radius:5px;" md-whiteframe="16">
+
+
+			<div layout="column" md-whiteframe="4" flex="70" flex-sm="100" flex-xs="100" >
+				<div layout="row" layout-sm="column" layout-xs="column" layout-align="space-around center" flex layout-align-sm="center stretch" layout-align-xs="center stretch"  style="margin: 20px;">
+					<div layout="row" layout-align="space-around center" flex>
+						<img src="{{restaurantDetails.imagen}}" style="width:200px; height:200px;  border-radius: 100px;">
+					</div>
+					<div layout="column"  flex>
+						<span class="md-display-1" ng-bind="restaurantDetails.nombre" style="color: red"></span>
+							<span class="md-md-body-1" style="color:#757575; margin: 15px 50px 15px 15px; ">Rango de precios S/. {{restaurantDetails.rangoDePrecios}}</span>
+						<span class="md-subhead" ng-bind="restaurantDetails.descripcion"></span>
+						<div layout="row" layout-sm="column" layout-xs="column" layout-align="space-around center" flex>
+							<div layout="row" layout-wrap flex style="background: #0284FE; margin:5px; padding:7px;">
+								<ng-md-icon icon="facebook-box"  style="fill:#ffffff" size="33" layout="row" layout-align="center center" flex></ng-md-icon>	
+								<a href="restaurantDetails.facebook" flex style="color:white; text-decoration:none;"> Facebook</a>
+							</div>
+							<div layout="row" layout-wrap flex style="background: #1DA1F2; margin:5px; padding:7px;">
+								<ng-md-icon icon="twitter"  style="fill:#ffffff" size="33" layout="row" layout-align="center center" flex></ng-md-icon>	
+								<a href="restaurantDetails.twitter" flex style="color:white; text-decoration:none;"> Twitter</a>
+							</div>
+							<div layout="row" layout-wrap flex style="background: #757575; margin:5px; padding:7px;">
+								<ng-md-icon icon="linkedin"  style="fill:#ffffff" size="33" layout="row" layout-align="center center" flex></ng-md-icon>	
+								<a href="" flex style="color:white; text-decoration:none;"> Instagram</a>
+							</div>
+						</div>
+					</div>
+				</div>
+					<span class="md-headline" style="margin-left: 40px; color:#757575;">INFORMACIÓN GENERAL</span>
+					<md-divider layout-margin="" layout-padding="" style="margin-left: 40px; margin-right: 40px;"></md-divider>
+				<div layout="row" layout-sm="column" layout-xs="column" layout-align="center none" flex>
+					<md-restaurant-maps flex idmapa="MPR" controls="false" zoom="15" setLatitud="restaurantDetails.latitud" setLongitud="restaurantDetails.longitud" setName="restaurantDetails.nombre" data="datos" style="width: 45vw; height: 32vh; position:relative;"></md-restaurant-maps>
+					<div style="padding: 15px;" flex>
+						<div layout="column" flex-offset-lg flex-sm="100" flex-xs="100" style="margin:15px;">
+							<span class="md-title" style="margin-top: 30px;">Dirección</span>
+							<md-divider  layout-margin="" ></md-divider>
+							<span class="md-subhead" ng-bind="restaurantDetails.direccion"></span>
+							<span class="md-title" style="margin-top: 30px;">Horario de Atención</span>
+							<md-divider  layout-margin="" ></md-divider>
+							<span class="md-subhead" ng-bind="restaurantDetails.horario"></span>
+							<span class="md-title" style="margin-top: 30px;">Rango de Precios</span>
+							<md-divider  layout-margin="" ></md-divider>
+							<span class="md-subhead" ng-bind="restaurantDetails.rangoDePrecios"></span>
+							<span class="md-title" style="margin-top: 30px;">Web Site</span>
+							<md-divider  layout-margin="" ></md-divider>
+							<span class="md-subhead" ng-bind="restaurantDetails.web"></span>
+						</div>
+						
+					</div>
+				</div>
+				<div layout="row" layout-align="center center" layout-xs="column" layout-sm="column" layout-align-sm="center stretch" layout-align-xs="center stretch">
+					<div layout="column"  flex-offset-lg flex="90" flex-sm="100" flex-xs="100" style="margin:15px;">
+							<span class="md-title" style="margin-top: 30px;">Tipo de Restaurant</span>
+							<md-divider  layout-margin="" ></md-divider>
+							<div layout-wrap layout-padding layout-margin>
+								<span class="md-subhead" ng-repeat="item in tipesRestaurant" ng-bind="item" style="padding:7px; border: 2px red solid; border-radius: 20px; margin: 5px;"></span>
+							</div>
+							<span class="md-title" style="margin-top: 30px;">Tipo de Cocina</span>
+							<md-divider  layout-margin="" ></md-divider>
+							<div layout-wrap layout-padding layout-margin>
+								<span class="md-subhead" ng-repeat="item in tipesCocina" ng-bind="item" style="padding:7px; border: 2px red solid; border-radius: 20px; margin: 15px;"></span>
+							</div>
+					</div>
+					<div layout="column"  flex-offset-lg flex="90" flex-sm="100" flex-xs="100" style="margin:15px;">
+							<span class="md-title" style="margin-top: 30px;">Tipo de Ambiente</span>
+							<md-divider  layout-margin="" ></md-divider>
+							<div layout-wrap layout-padding layout-margin>
+								<span class="md-subhead" ng-repeat="item in tipesAmbiente" ng-bind="item" style="padding:7px; border: 2px red solid; border-radius: 20px; margin: 15px;"></span>
+							</div>
+							<span class="md-title" style="margin-top: 30px;">Tipos de Pagos</span>
+							<md-divider  layout-margin="" ></md-divider>
+							<div  layout-wrap layout-padding layout-margin style=" margin-bottom: 30px;">
+								<span class="md-subhead" ng-repeat="item in tipespyments" ng-bind="item" style="padding:7px; border: 2px red solid; border-radius: 20px; margin: 15px;"></span>
+							</div>
+					</div>
+				</div>
+				
+			</div>
+			<div layout="column" layout-align="none center" flex>
+				<span class="md-title">RESTAURNATES RECOMENDADOS</span>
+			  	<div  ng-repeat="img in pinterest" ng-if="$index < 4" style="width: 384px; height: auto; background: #fff; box-shadow: 0  2px 0 rgba(0,0,0,0.22); margin-top: 10px; margin-bottom: 10px; cursor: pointer;" ng-click="details(img)">
+				  	<img style="background-image: url('{{img.imagen}}'); background-size: 100% 100%; width: 384px; height: 216px;" >
+				  	<p class="md-body-1" style="padding: 10px;">{{img.nombre}}</p>
+				</div>
+			</div>
+
+
+		</div>
+		
+	</div>
+</div>

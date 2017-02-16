@@ -1,0 +1,45 @@
+<div style="background-image: url('images/pexels-photo-64208.jpeg');" class="font">
+  <div layout="row" layout-align="center center" layout-fill layout-xs="column" layout-align-xs="center stretch" style="height: 100vh;min-height: 375px;">
+    <div layout="row"  flex="20" flex-gt-md="25" flex-md="35" flex-sm="45" flex-xs="100">
+      <div  flex="100" md-whiteframe="12dp" layout="column"  style="height: inherit;">
+        <md-toolbar class="md-primary">
+          <div class="md-toolbar-tools" layout="row" layout="row" layout-align="space-between center">
+            <h2 ng-bind="form.title || 'Login'"></h2>
+            <md-button class="md-icon-button" aria-label="submit" ng-click="SignIn(user)" ng-disabled="login.$invalid" ng-hide="form.button">
+              <ng-md-icon icon="send" style="fill:#fff" size="44" layout="row" layout-align="center center"></ng-md-icon>
+            </md-button>
+          </div>
+        </md-toolbar>
+        <div ng-style="form.active" layout-fill style="min-height: 375px; background-color: #fff;">
+          <div layout="row" layout-align="center center" layout-margin>
+            <img src="images/icons/user.svg" alt="user">
+          </div>
+          <form  name="login" layout="column" layout-align="center center" layout-padding layout-margin md-scroll-y>
+            <md-input-container>
+              <label>Email</label>
+              <input type="email" name="email" ng-model="user.email" required>
+              <div ng-show="login.email.$dirty && login.email.$invalid">
+                <span class="md-caption" ng-show="login.email.$error.required">Campo requerido</span>
+                <span class="md-caption" ng-show="login.email.$error.email">Email Incorrecto</span>
+              </div>
+            </md-input-container>
+            <md-input-container>
+              <label>Password</label>
+              <input type="password" name="password" ng-model="user.password" required>
+              <div ng-show="login.password.$dirty && login.password.$invalid">
+                <span class="md-caption" ng-show="login.password.$error.required">Campo requerido</span>
+                <span class="md-caption" ng-show="login.password.$error.password">Password Incorrecto</span>
+              </div>
+            </md-input-container>
+          </form>
+        </div>
+        <div layout="row"  layout-align="center center" ng-style="form.progress" layout-padding layout-margin layout-fill style="min-height: 375px;display: none; background-color: #fff;">
+          <div layout="row"  layout-align="center center" style="height: 345px; ">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>

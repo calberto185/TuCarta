@@ -1,0 +1,702 @@
+<!--<tab-configuration></tab-configuration>-->
+<div layout="column" style="height: 100vh;" ng-cloak="" >
+	<section layout="row" flex="">
+		<md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-whiteframe="8" style="height: 100vh;">
+	      <md-content md-colors="::{backgroundColor: 'default-primary-700'}" layout="column">
+	        <span flex></span>
+	        <div layout="column" class="md-toolbar-tools-bottom inset">
+			  <ng-view-photo match="user" class="md-avatar"  url="{{perfil.imagen || 'images/icons/user.svg'}}" name="{{perfil.nombre || 'perfil'}}" width="100" height="100" radius="90"></ng-view-photo>
+	          <!--<img ng-src="images/icons/user.svg"  class="md-avatar" alt="avatar" style="width: 100px; height: 100px;">-->
+	          <span></span>
+	          <div layout="row" layout="space-between center" flex>
+	          	<div flex="auto">
+		          	<span class="md-subhead" ng-bind="currentUser.name"></span>
+		          	<span class="md-subhead" ng-bind="currentUser.email"></span>
+	          	</div>
+	          	<div flex="nogrow">
+					<md-button class="md-icon-button" aria-label="SingOut" ng-click="viewPerfil = !viewPerfil" ng-init="viewPerfil = viewPerfil">
+						<ng-md-icon ng-show="!viewPerfil" icon="keyboard_arrow_down" ng-init="iconslidePerfil = 'keyboard_arrow_down'" style="fill:#ffffff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+						<ng-md-icon ng-show="viewPerfil" icon="keyboard_arrow_up" ng-init="iconslidePerfil = 'keyboard_arrow_down'" style="fill:#ffffff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+					</md-button>
+	          	</div>	
+	          </div>
+	        </div>
+	        <span flex></span>
+	      </md-content>
+			<md-content layout="column" flex>
+				<md-list>
+					<md-list-content ng-show="!viewPerfil">
+						<div ng-repeat="item in items">
+							<md-list-item ng-click="link($index,item.title)">
+					            <ng-md-icon icon="{{item.icon}}" style="fill: #757575" size="44" layout="row" layout-align="end center"></ng-md-icon> 
+					            <p class="md-subhead">{{item.title | uppercase}}</p>
+	            			</md-list-item>
+	            			<div ng-show="$index==0 || $index==items.length - 2">
+	            				<md-divider></md-divider>
+	            				<md-subheader ng-show="$index==0">ACTIVIDAD</md-subheader>
+	            				<!--<md-subheader ng-show="$index==items.length - 2">CONFIGURACIÓN</md-subheader>-->
+	            			</div>
+						</div>
+					</md-list-content>
+					<md-list-content ng-show="viewPerfil" layout-margin>
+            			<md-subheader>PERFIL</md-subheader>
+            			<form name="perfil">
+					        <md-input-container class="md-icon-float md-block">
+					          <label>Nombre</label>
+					          <input ng-model="perfil.nombres" type="text" required>
+					          <div ng-messages="perfil.nombres.$error" ng-show="perfil.nombres.$dirty">
+					            <div ng-message="required">Campo obligatorio</div>
+					          </div>
+					        </md-input-container>
+					        <!--<md-input-container class="md-icon-float md-block">
+					          <label>Email</label>
+					          <input ng-model="perfil.correo" type="email" required>
+					          <div ng-messages="perfil.correo.$error" ng-show="perfil.correo.$dirty">
+					            <div ng-message="required">Campo obligatorio</div>
+					          </div>
+					        </md-input-container>-->
+					        <md-input-container class="md-icon-float md-block">
+					          <label>Teléfono</label>
+					          <input ng-model="perfil.telefono" type="text" required>
+					          <div ng-messages="perfil.telefono.$error" ng-show="perfil.telefono.$dirty">
+					            <div ng-message="required">Campo obligatorio</div>
+					          </div>
+					        </md-input-container>
+					        <md-open-file match="user" flex="100" type="input" icon="camera" label="Imagen" tooltip="Añadir Imagen" tooltip_position="bottom" model="perfil.imagen"></md-open-file>
+						    <div layout="row" layout-xs="column" layout-align="center center" layout-align-xs="center stretch">
+						    <md-button class="md-primary md-raised" aria-label="Modificar" ng-disabled="perfil.$invalid" ng-click="editPerfil(perfil)">save</md-button>
+						    </div>
+            			</form>
+					</md-list-content>
+				</md-list>
+			</md-content>
+		</md-sidenav>
+		<div layout="column" flex="">
+			<md-toolbar ng-show="!showSearch">
+				<div class="md-toolbar-tools" flex>
+					<md-button class="md-icon-button" aria-label="Menu" ng-click="MenuBar()" hide-gt-md>
+						<ng-md-icon icon="dehaze" style="fill:#fff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+					</md-button>
+					<h2 hide-sm hide-xs>{{title || 'home' | uppercase}}</h2>
+					<span flex></span>
+					<div flex="nogrow">
+						<md-button class="md-icon-button" aria-label="search" ng-click="showSearch = !showSearch">
+							<ng-md-icon icon="search" style="fill:#fff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+						</md-button>
+						<md-button class="md-icon-button" aria-label="add" ng-click="new()">
+							<ng-md-icon icon="add" style="fill:#fff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+						</md-button>
+						<md-menu>
+							<md-button class="md-icon-button" aria-label="InfoUser" ng-click="$mdOpenMenu($event)">
+								<ng-md-icon icon="account_circle" style="fill:#fff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+							    <md-tooltip>Perfil</md-tooltip>
+							</md-button>
+							<md-menu-content width="5">
+								<md-menu-item ng-click="EditProfile()">
+									<span class="md-subhead" ng-bind="currentUser.email"></span>
+									<div>
+										<md-button class="md-icon-button" aria-label="edit profile" ng-click="EditProfile()">
+											<ng-md-icon icon="edit" style="fill:#757575" size="33" layout="row" layout-align="center center"></ng-md-icon>
+										</md-button>
+									</div>
+								</md-menu-item>
+								<md-menu-item ng-click="SingOut()">
+									<span class="md-subhead">Cerrar Sesion</span>
+									<div ng-sign-out>
+										<md-button class="md-icon-button" aria-label="SingOut" ng-click="SingOut()">
+											<ng-md-icon icon="exit_to_app" style="fill:#757575" size="33" layout="row" layout-align="center center"></ng-md-icon>
+										</md-button>
+									</div>
+								</md-menu-item>
+							</md-menu-content>
+						</md-menu>
+					</div>
+				</div>
+			</md-toolbar>
+			<md-toolbar class="md-primary"  ng-show="showSearch" md-whiteframe="4">
+				<div class="md-toolbar-tools" flex>
+					<div layout="row" flex="initial" layout-align="center center">
+						<md-button class="md-icon-button" aria-label="back" ng-click="showSearch = !showSearch">
+							<ng-md-icon icon="arrow_back" style="fill:#fff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+						</md-button>
+						<span class="md-subhead" style="margin-right: 50px;" hide-sm hide-xs>Back</span>
+					</div>
+					<md-input-container class="search" layout="row"  ng-keypress="viewSearch()" flex layout-align="center center">
+						<label class="md-caption">Search</label>
+						<input type="text" name="search" ng-model="searching">
+					</md-input-container>
+					<div flex="nogrow">
+						<md-button class="md-icon-button" aria-label="search" ng-click="searching=''">
+							<ng-md-icon icon="clear" style="fill:#fff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+						</md-button>
+					</div>
+				</div>
+			</md-toolbar>
+			<md-content md-scroll-y  flex="" layout-padding="">
+<!--tabs -->
+				<div ng-show="configRestaurantAlert" ng-init="configRestaurantAlert=false" md-colors="::{backgroundColor: 'default-primary-300'}" layout="row" layout-xs="column" layout-align="space-between center" flex >
+					<div layout="row" layout-align="center center">
+						<md-button class="md-icon-button" aria-label="closed message" disabled>
+							<ng-md-icon icon="flag" style="fill:#fff" size="33" layout="row" layout-align="center center"></ng-md-icon>
+						</md-button>
+						<span class="md-subhead">{{'Puedes agregar Platillos, pero mientras no completes los datos de tu Restaurante, estos no seran visibles en la Aplicacion (APP)' | uppercase}}</span>
+					</div>
+					<md-button class="alert" aria-label="closed message" ng-click="tabLink=3" >
+						Configurar
+					</md-button>
+				</div>
+				  	<!--<div layout="row"  ng-show="loadingMain" ng-init="loadingMain=true" layout-align="center center" class="screemLoading">
+				   		<md-progress-circular md-mode="indeterminate" layout="row" layout-align="center center"></md-progress-circular>
+				  	</div>-->
+       				 <md-loading ng-show="loadingMain" ng-init="loadingMain=true" visible="false" progress="" text="" imagen="" finally="" statetext=""></md-loading>
+				<div ng-show="tabLink==0" layout="row"  ng-init="tabLink=0">
+					<div layout="column" ng-show="!loadingMain" layout-align="center stretch" flex>
+						<slick class="autoplayHome" init-onload=true style="background-image: url('images/pexels-photo-64208.jpeg');">
+							<div id="viewGalery-{{$index}}" ng-repeat="img in galeria" class="font" style="background-image: url('images/galeria/{{img.font}}'); background-size: 100% 100%; height: 340px; "></div>
+						</slick>
+						<div layout="row" layout-sm="column" layout-xs="column" style="height: 40vh;" >
+							<form layout="column" flex md-whiteframe="2">
+								
+								<div layout="row" layout-align="space-between center" md-whiteframe="2">
+									<div layout="row">
+										<md-subheader class="md-no-sticky">Actualiza el estado de tu Restaurante</md-subheader>
+									</div>
+									<div>
+										<md-button class="md-icon-button" aria-label="save" ng-click="">
+											<ng-md-icon icon="save" style="fill:#757575" size="33" layout="row" layout-align="center center"></ng-md-icon>
+										</md-button>
+									</div>
+								</div>
+								<div layout="row" layout-align="center stretch" layout-align-xs="center stretch"  layout-xs="column" flex>
+									<span flex="5"></span>
+							        <md-input-container flex flex-sm="100" flex-xs="100"  class="md-icon-float md-block">
+							          <label>Rango de Precios</label>
+							          <textarea ng-model="restaurant.rangoDePrecios"   rows="1" md-select-on-focus required></textarea>
+							          <div layout="row" layout-sm="column"  layout-xs="column" flex layout="space-between center">
+								          <span flex class="md-caption" style="color:#757575">Formato de precios: Ejemplo: 5-15</span>
+								          <div flex ng-messages="restaurant.rangoDePrecios.$error" ng-show="restaurant.rangoDePrecios.$dirty">
+								            <div ng-message="required">Campo obligatorio</div>
+								          </div>
+							          </div>
+							        </md-input-container>
+								</div>
+						        <md-input-container flex-sm="100" flex-xs="100" flex-offset="5" class="md-icon-float md-block">
+						          <label>Descripcion</label>
+						          <textarea ng-model="restaurant.descripcion"   rows="5" md-select-on-focus required></textarea>
+						          <div ng-messages="restaurant.descripcion.$error" ng-show="restaurant.descripcion.$dirty">
+						            <div ng-message="required">Campo obligatorio</div>
+						          </div>
+						        </md-input-container>
+							</form>
+							<div layout="column" flex>
+							  <div md-whiteframe="2">
+							  	<md-subheader class="md-no-sticky">Mensajes</md-subheader>
+							  </div>
+							  <div  md-scroll-y flex="" layout-padding="" style=" overflow-y: scroll">
+								<md-list md-whiteframe="2" >
+								  <md-list-item ng-repeat="person in people" ng-click="goToPerson(person.name, $event)" class="noright">
+								    <img alt="{{ person.name }}" ng-src="{{ person.img }}" class="md-avatar">
+								    <p>{{ person.name }}</p>
+								    <span class="md-caption">12/02/2017</span>
+									<md-button class="md-icon-button md-secondary" aria-label="SingOut" ng-click="">
+										<ng-md-icon icon="message" style="fill:#757575" size="33" layout="row" layout-align="center center"></ng-md-icon>
+									</md-button>
+								  </md-list-item>
+								</md-list>
+							  </div>
+							</div>
+						</div>
+					</div>
+					</div>
+				<div ng-show="tabLink==1" >
+					<div layout="column"  >
+						<div ng-show="!editPlatillo" layout="column" layout-align="space-around center" flex >
+							<!--<div flex layout="column" layout-align="center center">
+	      						<md-progress-circular class="md-primary" md-diameter="40" ng-show="ItemLoading"></md-progress-circular>
+							</div>-->
+
+	      					<!--<div flex ng-show="platillos == false">
+	      						<span class="md-body-2">Aun no haz publicado ningun platillos </span>
+	      					</div>-->
+        					<!--<md-loading ng-show="ItemLoading" visible="false" progress="" text="" imagen="" finally="" statetext=""></md-loading>-->
+						</div>
+					    <md-content ng-show="!editPlatillo" ng-init="editPlatillo=false" layout="column" flex="100" layout-align="center stretch" layout-align-sm="space-around stretch" layout-align-xs="space-around stretch" md-scroll-y>
+							<div layout="row" layout-align="space-between center" md-whiteframe="2">
+								<md-subheader class="md-no-sticky">Lista de Platillos a la Carta</md-subheader>
+							</div>
+							<div flex ng-show="platillos == false" flex layout="column" layout-align="center center" layout-margin layout-padding>
+	      						<span class="md-body-2">Aun no haz publicado ningun platillos </span>
+	      					</div>
+					        <md-card layout="row" flex="" layout-xs="column"  ng-repeat="menu in platillos | myFilter:searching" ng-hide="menus.length == '0'">
+						       <md-card-title-media flex="30" flex-xs="100">
+						          <md-card>
+						            <img ng-src="{{menu.imagen}}" class="md-card-lg card-media" alt="{{menu.nombre}}">
+						          </md-card>
+						       </md-card-title-media>
+						        <div flex="70" flex-xs="100" layout="column" layout-align="space-around stretch">
+						          <div>
+						            <md-card-title>
+						              <md-card-title-text>
+						                <span class="md-headline">{{menu.nombre | uppercase}}</span>
+						              </md-card-title-text>
+						            </md-card-title>
+						            <md-divider style="margin:0px 25px 0px 25px"></md-divider>
+						            <md-card-content layout="row" layout-xs="column" flex="">
+						              <div flex="" layout-padding="">
+						                <h6>INGREDIENTES:</h6>
+						                <p>{{menu.ingredientes}}</p>
+						              </div>
+						              <div flex="" layout-padding="">
+						                <h6>DESCRIPCÍON:</h6>
+						                <p>{{menu.descripcion}}</p>
+						                <p align="right">{{menu.precio | currency:'S/. '}}</p>
+						              </div>
+						            </md-card-content>
+						          </div>
+						          <md-card-actions layout="row" layout-align="start center">
+						            <md-card-icon-actions>
+						            <div flex="" layout="row" layout-align="end end" >
+						              <md-button   class="md-icon-button" aria-label="Modificar"  ng-click="action('modify', $index, menu)">
+						                <ng-md-icon icon="edit" style="fill: #757575" size="33" layout="row" layout-align="end center"></ng-md-icon> 
+						                <md-tooltip>Editar</md-tooltip>
+						              </md-button>
+						              <md-button   class="md-icon-button"  aria-label="Remove"  ng-click="OptionPlatillo('remove', menu.id, menu)">
+						                <ng-md-icon icon="delete_sweep" style="fill: #757575" size="33" layout="row" layout-align="end center"></ng-md-icon> 
+						                <md-tooltip>Eliminar</md-tooltip>
+						              </md-button>
+						            </div>
+						            </md-card-icon-actions>
+
+						            <md-button ng-click="OptionPlatillo('state', menu.id,menu)" ng-model="menu.estado" aria-label="estado">{{menu.estado | estado}}</md-button>
+						            <md-switch class="md-primary" ng-model="menu.estado" aria-label="Switch" ng-click="OptionPlatillo('state', menu.id,menu)"></md-switch>
+						          </md-card-actions>
+						        </div>
+						     </md-card>
+					     </md-content >
+						<md-content ng-show="editPlatillo">
+						  <div ng-style="newPlatillo" class="newPlatillo">
+						    <div flex="row">
+							    <div layout="row" layout-sm="column" layout-xs="column" flex="100" ng-show="Platilloloading" ng-init="Platilloloading=true">
+							      <div flex="60" flex-sm="100" flex-xs="100">
+							      <md-content layout-margin >
+									<div layout="row" layout-align="space-between center" md-whiteframe="2">
+										<div layout="row">
+											<md-button class="md-icon-button" aria-label="before" ng-click="new()">
+												<ng-md-icon icon="arrow_back" style="fill:#757575" size="33" layout="row" layout-align="center center"></ng-md-icon>
+											</md-button>
+											<md-subheader class="md-no-sticky">Añadir Platillo</md-subheader>
+										</div>
+									</div>
+							        <form ng-submit="" name="platillo" layout-padding>
+							          <div layout-gt-xs="row">
+							            <md-input-container class="md-block" flex-gt-sm>
+							              <label>Nombre del Platillo</label>
+							              <input ng-model="menu.nombre" name="nombre" required>
+							              <div ng-show="platillo.nombre.$dirty && platillo.nombre.$invalid">
+							                <span class="md-caption" ng-show="platillo.nombre.$error.required">Campo obligatorio</span>
+							              </div>
+							            </md-input-container>
+							            <md-input-container class="md-block" flex-gt-sm>
+							              <label>Precio</label>
+							              <input ng-model="menu.precio" required name="precio" >
+							              <div ng-show="platillo.precio.$dirty && platillo.precio.$invalid">
+							                <span class="md-caption" ng-show="platillo.precio.$error.required">Campo obligatorio</span>
+							              </div>
+							            </md-input-container>
+							            <md-input-container class="md-block" flex-gt-sm>
+							              <label>Moneda</label>
+							              <md-select ng-model="menu.moneda">
+							                <md-option ng-repeat="state in ['Nuevos Soles (S/.)','Dolares ($.)']" value="{{state}}">
+							                  {{state}}
+							                </md-option>
+							              </md-select>
+							            </md-input-container>
+							          </div>
+							          <div layout-gt-sm="row" flex>
+							            <md-input-container class="md-block" flex-sm="100" flex-xs="100" flex="20">
+							              <label>Disponibilidad</label>
+							              <input ng-model="menu.disponibilidad" required name="disponibilidad">
+							              <div ng-show="platillo.disponibilidad.$dirty && platillo.disponibilidad.$invalid">
+							                <span class="md-caption" ng-show="platillo.disponibilidad.$error.required">Campo obligatorio</span>
+							                <span class="md-caption" ng-show="platillo.disponibilidad.$error.number">Dato Incorrecto</span>
+							              </div>
+							            </md-input-container>
+	    								<md-open-file match="platillos" flex="100" type="input" icon="camera" label="Imagen" tooltip="Añadir Imagen" tooltip_position="bottom" model="menu.imagen"></md-open-file>
+							          </div>
+							          <div layout-gt-sm="column" flex="">
+							            <md-input-container class="md-block" flex-gt-sm flex="100">
+							              <label>Ingredientes</label>
+							            <md-chips ng-model="menu.ingredientes" readonly="readonly" md-removable="removable" required md-separator-keys="keys"></md-chips>
+							            <div class="md-caption" layout-margin style="color:#757575">Preciona Enter o coma para separar tus Ingredientes !!!</div>
+							            </md-input-container>
+							            <md-input-container class="md-block" flex-gt-sm flex="100">
+							              <label>Descripcion</label>
+							              <textarea ng-model="menu.descripcion"  md-maxlength="500" rows="3" md-select-on-focus required></textarea>
+							            </md-input-container>
+							          </div>
+							            <div layout="row" layout-align="end center">
+							              <md-switch class="md-primary" ng-model="menu.estado" aria-label="Switch">{{menu.estado | estado | uppercase}}</md-switch>
+							            </div>
+							          <div layout="row" flex="" layout-align="center center">
+							            <md-button  class="md-raised md-primary" type="submit" aria-label="More" ng-click="OptionPlatillo('new', -1,menu)" ng-disabled="platillo.$invalid || menu.ingredientes.length==0" ng-show="!botonVisible">Añadir Platillo</md-button>
+							            <md-button  class="md-raised md-primary" type="submit" aria-label="More" ng-click="OptionPlatillo('save', menu.id, menu)" ng-show="botonVisible" >Guardar Cambios</md-button>
+							          </div>
+							        </form>
+							      </md-content>
+							      </div>
+							      <div flex="40"  flex-sm="100" flex-xs="100">
+							        <div layout="columnn" style=" position: static;">
+							          <md-content layout-margin layout-padding ImgId="viewImage">
+							            <md-card >
+										  <ng-view-photo match="platillos"  url="{{menu.imagen || card.src}}" name="{{menu.nombre || card.nombre}}" width="384" height="216"></ng-view-photo>
+							              <md-card-title>
+							                <md-card-title-text>
+							                  <span class="md-headline">{{menu.nombre || card.nombre}}</span>
+							                </md-card-title-text>
+							              </md-card-title>
+							              <md-card-content>
+							                <div layout="row" flex="100">
+							                  <textarea flex="80" ng-bind="menu.descripcion || card.descripcion" rows="5" md-select-on-focus style="border:none;"></textarea>
+							                  <div flex="20">{{menu.precio || '0' | currency:'S/'}}</div>
+							                </div>
+							              </md-card-content>
+							              <md-card-actions layout="row" layout-align="end center">
+							                <md-button class="md-icon-button" aria-label="Favorite">
+							                  <span class="glyphicon glyphicon-heart" aria-hidden="true" style="font-size:1.5em; color:#c9c9c9;"></span>
+							                </md-button>
+							                <md-button class="md-icon-button" aria-label="Settings">
+							                  <span class="glyphicon glyphicon-align-justify" aria-hidden="true" style="font-size:1.5em; color:#c9c9c9;"></span>
+							                </md-button>
+							                <md-button class="md-icon-button" aria-label="Share">
+							                  <span class="glyphicon glyphicon-share-alt" aria-hidden="true" style="font-size:1.5em; color:#c9c9c9;"></span>
+							                </md-button>
+							              </md-card-actions>
+							            </md-card>
+							          </md-content>
+							        </div>
+							      </div>
+							    </div>
+						        <div layout="row"  layout-align="center center" ng-show="!Platilloloading" class="screemLoading">
+						            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+						        </div>
+						        <md-loading ng-show="!Platilloloading" visible="false" progress="" text="" imagen="" finally="" statetext=""></md-loading>
+							  </div>
+						  </div>
+						</md-content>
+						<div></div>
+			      		</div>
+
+					</div>
+				<div ng-show="tabLink==2">
+					<div layout="row" layout-align="space-between center" md-whiteframe="2">
+						<div layout="row">
+							<md-subheader class="md-no-sticky">Galeria de Imagenes</md-subheader>
+						</div>
+						<!-- <div>
+							<md-button class="md-icon-button" aria-label="save" ng-click="">
+								<ng-md-icon icon="save" style="fill:#757575" size="33" layout="row" layout-align="center center"></ng-md-icon>
+							</md-button>
+						</div> -->
+					</div>
+<!-- 
+					<div class="slider-for" style="width: 200px; height: 200px;"></div>
+					<div class="slider-nav" layout="row" layout-align="center stretch" flex>
+						<p flex>1</p>
+						<p flex>2</p>
+						<p flex>3</p>
+						<p flex>4</p>
+						<p flex>5</p>
+						<p flex>6</p>
+						<p flex>7</p>
+					</div>
+					<script>
+						 $('.slider-for').slick({
+						  slidesToShow: 1,
+						  slidesToScroll: 1,
+						  arrows: false,
+						  fade: true,
+						  asNavFor: '.slider-nav'
+						});
+						$('.slider-nav').slick({
+						  slidesToShow: 3,
+						  slidesToScroll: 1,
+						  asNavFor: '.slider-for',
+						  dots: true,
+						  centerMode: true,
+						  focusOnSelect: true
+						});
+					</script> -->
+
+
+					<md-open-file-multiple match="ImageGalery"></md-open-file-multiple>
+					<!-- <ng-view-photo match="ImageGalery"  url="{{img.id || card.src}}" name="{{img.font || card.nombre}}" width="384" height="216" ng-repeat="img in galeria"></ng-view-photo> -->
+			    	<md-open-file match="ImageGalery" type="imagen" icon="images/icons/photo-camera.svg" label="Imagen" tooltip="Añadir Imagen" tooltip_position="bottom" model="restaurant.imagen"></md-open-file>
+
+	
+
+
+
+				     </div>
+				<div ng-show="tabLink==3">
+					<tab-configuration></tab-configuration>
+				    </div>
+				<div ng-show="tabLink==4">COntenido 4</div>
+					
+<!--end tabs-->
+			</md-content>
+		</div>
+	</section>
+</div>
+<script type="text/ng-template" id="AlertConfigRestaurant.tmpl.html">
+	<md-dialog aria-label="Alerta Configruacion Restaurant">
+		<div layout="column" layout-align="center center" layout-margin layout-padding flex>
+		  <img ng-src="images/icons/menu.svg" alt="alert" style="width:150px; height:150px;">
+		  <p class="md-headline">Tu Restaurant no esta Configurado, <br> <span class="md-body-1" 
+		  layout="row" layout-align="center center">¿Deseas Configurarlo ahora?</span></p>
+		    <div layout="row" layout-xs="column" layout-align="space-beatween center" layout-align-xs="center stretch">
+		    <md-button class="md-primary md-raised" aria-label="Modificar"  ng-click="closeDialog()">más tarde</md-button>
+		    <md-button class="md-primary md-raised" aria-label="Modificar"  ng-click="configRestaurant()">configurar ahora</md-button>
+		    </div>
+		</div>
+	</md-dialog>
+</script>
+<script type="text/ng-template" id="featuresRestaurnat.tmpl.html">
+        <md-chips  ng-model="model" md-autocomplete-snap="" md-transform-chip="transformChip($chip)" md-require-match="'true'">
+        <!--<md-chips  ng-model="model" md-autocomplete-snap="" md-require-match="'true'">-->
+          <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" ng-focus="searchText='a'" ng-click="searchText='a'" md-items="item in querySearch(searchText)" md-item-text="item.name" placeholder="{{label}}">
+            <span md-highlight-text="searchText">{{item.name}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>
+              <strong>{{$chip.name}}</strong>
+            </span>
+          </md-chip-template>
+        </md-chips>
+</script>
+<script type="text/ng-template" id="restaurantMaps.tmpl.html">
+	<div id="{{idmapa}}" style="height: 400px;" layout="column" layout-align="center stretch"></div>
+	<div ng-model="setName"></div>
+	<div layout="column" layout-align="center stretch" flex>
+	    <div hide-sm hide-xs flex>
+	      <md-input-container>
+	        <label>Latitud</label>
+	        <input ng-model="latitud" type="text" name="latitud" ng-value="setLatitud">
+	      </md-input-container>
+	      <md-input-container>
+	        <label>Longitud</label>
+	        <input ng-model="longitud" type="text" name="longitud" ng-value="setLongitud">
+	      </md-input-container>
+	      <md-button class="md-icon-button" aria-label="location_on" ng-click="location_on()">
+	        <ng-md-icon icon="location_on" style="fill: #757575" size="33" layout="row" layout-align="end center"></ng-md-icon> 
+	      </md-button>
+	      <md-button class="md-icon-button" aria-label="remove_location" ng-click="location_off()">
+	        <ng-md-icon icon="delete" style="fill: #757575" size="33" layout="row" layout-align="end center"></ng-md-icon>
+	      </md-button>
+	    </div>
+	</div>
+</script>
+
+
+
+
+
+
+
+
+<script type="text/ng-template" id="tabConfiguration.tmpl.html">
+  <md-contend  layout="column" flex="" ng-show="!configAllRestaurant" ng-init="configAllRestaurant=false">
+  	<div layout="row" layout-wrap flex layout-margin>
+  		<md-icon class="numeration" id="number-0" md-svg-src="images/icons/chef.svg"  aria-label="paso 0" flex ng-click="pass(0,restaurant)"></md-icon>
+  		<md-icon class="numeration" id="number-{{$index}}" md-svg-src="images/icons/{{value}}.svg" ng-repeat="(key, value) in currentViewRestaurant"  aria-label="paso {{key}}" flex ng-click="pass($index,restaurant)" ng-if="$index > 0 && $index < 5"></md-icon>
+  		<md-icon class="numeration" id="number-5" md-svg-src="images/icons/save.svg"  aria-label="paso 5" flex ng-click="pass(5,restaurant)"></md-icon>
+  	</div>
+    <div flex="" layout="column"  style="border:1px solid #c9c9c9; border-radius: 5px;" layout-margin layout-padding>
+    	<div ng-show="part==0" ng-class="ClassConfigRestaurant" ng-init="part=0">
+		    <md-input-container flex="" flex-sm="100" flex-xs="100" class="md-icon-float md-block">
+		      <label>Nombre de Restaurant</label>
+		      <input ng-model="restaurant.nombre" type="text" required>
+		      <div ng-messages="restaurant.nombre.$error" ng-show="restaurant.nombre.$dirty">
+		      <div ng-message="required">Campo obligatorio</div>
+		      </div>
+		    </md-input-container>
+	        <md-input-container flex-sm="100" flex-xs="100" class="md-icon-float md-block">
+	          <label>Telefono</label>
+	          <input ng-model="restaurant.telefono" type="text" required>
+	          <div ng-messages="restaurant.telefono.$error" ng-show="restaurant.telefono.$dirty">
+	            <div ng-message="required">Campo obligatorio</div>
+	          </div>
+	        </md-input-container>
+	        <md-input-container flex-sm="100" flex-xs="100" class="md-icon-float md-block">
+	          <label>Direccion</label>
+	          <input ng-model="restaurant.direccion" type="restaurant.direccion" required>
+	          <div ng-messages="restaurant.direccion.$error" ng-show="restaurant.direccion.$dirty">
+	            <div ng-message="required">Campo obligatorio</div>
+	          </div>
+	        </md-input-container>
+	        <md-input-container flex-sm="100" flex-xs="100" class="md-icon-float md-block">
+	          <label>Horario de atencion</label>
+	          <input ng-model="restaurant.horario" type="text" required>
+	          <div ng-messages="restaurant.horario.$error" ng-show="restaurant.horario.$dirty">
+	            <div ng-message="required">Campo obligatorio</div>
+	          </div>
+	        </md-input-container>
+	        <md-input-container flex-sm="100" flex-xs="100"  class="md-icon-float md-block">
+	          <label>Descripcion</label>
+	          <textarea ng-model="restaurant.descripcion"   rows="1" md-select-on-focus required></textarea>
+	          <div ng-messages="restaurant.descripcion.$error" ng-show="restaurant.descripcion.$dirty">
+	            <div ng-message="required">Campo obligatorio</div>
+	          </div>
+	        </md-input-container>
+    	</div>
+    	<div ng-show="part==1" ng-class="ClassConfigRestaurant" >
+    		<!-- <md-tipo-restaurant></md-tipo-restaurant> -->
+			<ng-restaurant-features  model="restaurant.tipoRestaurant" ng-init="restaurant.tipoRestaurant =[{name:'peruana'}]" type="restaurant" label="Tipo de Restaurant" flex></ng-restaurant-features>
+			<div layout="row" layout-margin layout-padding></div>
+			<ng-restaurant-features  model="restaurant.tipoCocina" ng-init="restaurant.tipoCocina =[{name:'peruana'}]" type="cocina" label="Tipo de Cocina" flex></ng-restaurant-features>
+			<div layout="row" layout-margin layout-padding></div>
+			<ng-restaurant-features  model="restaurant.tipoPago" ng-init="restaurant.tipoPago =[{name:'efectivo'}]" type="pago" label="Medio de Pago" flex></ng-restaurant-features>
+			<div layout="row" layout-margin layout-padding></div>
+			<ng-restaurant-features  model="restaurant.tipoAmbiente" ng-init="restaurant.tipoAmbiente =[{name:'lounge'}]" type="ambiente" label="Tipo de Ambiente" flex></ng-restaurant-features>
+			<div layout="row" layout-margin layout-padding></div>
+	        <md-input-container flex-sm="100" flex-xs="100"  class="md-icon-float md-block">
+	          <label>Rango de Precios</label>
+	          <textarea ng-model="restaurant.rangoDePrecios"   rows="1" md-select-on-focus required></textarea> 
+	          <div layout="row" layout-sm="column"  layout-xs="column" flex layout="space-between center">
+		          <span flex class="md-caption" style="color:#757575">Formato de precios: Ejemplo: 5-15</span>
+		          <div flex ng-messages="restaurant.rangoDePrecios.$error" ng-show="restaurant.rangoDePrecios.$dirty">
+		            <div ng-message="required">Campo obligatorio</div>
+		          </div>
+	          </div>
+	        </md-input-container>
+    	</div>
+    	<div ng-show="part==2" ng-class="ClassConfigRestaurant" >
+	        <md-input-container flex-sm="100" flex-xs="100"  class="md-icon-float md-block">
+	          <label>Facebook</label>
+	          <textarea ng-model="restaurant.facebook"   rows="1" md-select-on-focus></textarea>
+	          <div ng-messages="restaurant.facebook.$error" ng-show="restaurant.facebook.$dirty">
+	            <div ng-message="required">Campo obligatorio</div>
+	          </div>
+	        </md-input-container>
+	        <md-input-container flex-sm="100" flex-xs="100"  class="md-icon-float md-block">
+	          <label>Twitter</label>
+	          <textarea ng-model="restaurant.twitter"   rows="1" md-select-on-focus></textarea>
+	          <div ng-messages="restaurant.twitter.$error" ng-show="restaurant.twitter.$dirty">
+	            <div ng-message="required">Campo obligatorio</div>
+	          </div>
+	        </md-input-container>
+	        <md-input-container flex-sm="100" flex-xs="100"  class="md-icon-float md-block">
+	          <label>Instagram</label>
+	          <textarea ng-model="restaurant.instagram"   rows="1" md-select-on-focus></textarea>
+	          <div ng-messages="restaurant.instagram.$error" ng-show="restaurant.instagram.$dirty">
+	            <div ng-message="required">Campo obligatorio</div>
+	          </div>
+	        </md-input-container>
+	        <md-input-container flex-sm="100" flex-xs="100"  class="md-icon-float md-block">
+	          <label>Web Site</label>
+	          <textarea ng-model="restaurant.webSite"   rows="1" md-select-on-focus></textarea>
+	          <div ng-messages="restaurant.webSite.$error" ng-show="restaurant.webSite.$dirty">
+	            <div ng-message="required">Campo obligatorio</div>
+	          </div>
+	        </md-input-container>
+    	</div>
+    	<div ng-show="part==3" ng-class="ClassConfigRestaurant" >
+    		<div layout="column">
+	    		<span class="md-subhead" layout-margin>MAPA</span>
+	    		<!-- <span class="md-body-1" layout-margin>Clickea en el recuadro del mapa para seleccionar la ubicacion de tu restaurant</span> -->
+    		</div>
+	       <!--  <md-restaurant-maps idmapa="mapas" controls="true" zoom="3" setLatitud="restaurant.latitud" setLongitud="restaurant.longitud" setName="restaurant.nombre" data="datos"></md-restaurant-maps> -->
+    		<md-input-container flex-sm="100" flex-xs="100" class="md-icon-float md-block">
+		        <label>Latitud</label>
+		        <input ng-model="restaurant.latitud" type="text" ng-readonly="true" required>
+		        <div ng-messages="restaurant.latitud.$error" ng-show="restaurant.latitud.$dirty">
+		          <div ng-message="required">Campo obligatorio</div>
+		        </div>
+		    </md-input-container>
+		    <md-input-container flex-sm="100" flex-xs="100" class="md-icon-float md-block">
+		        <label>Longitud</label>
+		        <input ng-model="restaurant.longitud" type="text" ng-readonly="true" required>
+		        <div ng-messages="restaurant.longitud.$error" ng-show="restaurant.longitud.$dirty">
+		          <div ng-message="required">Campo obligatorio</div>
+		        </div>
+		    </md-input-container>
+    	</div>
+    	<div ng-show="part==4" ng-class="ClassConfigRestaurant" layout="column" layout-wrap flex>
+    		<!--<md-subheader class="md-no-sticky">Galeria de imagenes de los ambientes</md-subheader>
+    		<md-divider></md-divider>
+			<md-open-file-multiple></md-open-file-multiple>
+	    	<md-open-file type="imagen" icon="images/icons/photo-camera.svg" label="Imagen" tooltip="Añadir Imagen" tooltip_position="bottom" model="restaurant.imagen"></md-open-file>-->
+    		<md-subheader class="md-no-sticky">Logo de Restaurante</md-subheader>
+    		<md-divider></md-divider>
+				<ng-view-photo match="restaurante" class="md-avatar"  url="{{restaurant.imagen || 'images/logo.svg'}}" name="{{restaurant.nombre || 'restaurant'}}" width="384" height="216" radius="0"></ng-view-photo>
+	        <md-open-file model="restaurant.imagen" match="restaurante" flex="100" type="input" icon="camera" label="Imagen" tooltip="Añadir Imagen" tooltip_position="bottom" model="restaurant.imagen"></md-open-file>
+    	</div>
+    	<div ng-show="part==5" ng-class="ClassConfigRestaurant">
+    		  <md-loading visible="true" progress="RestaurantProgress" text="RestaurantText" imagen="RestaurantImagen" finally="RestaurantFinal" statetext="RestaurantTextFinal" ></md-loading>
+    		<!-- <div ng-show="!cargaRestaurant" ng-init="cargaRestaurant = !cargaRestaurant">
+    		  <md-loading visible="true" progress="RestaurantProgress" text="RestaurantText" imagen="RestaurantImagen" finally="RestaurantFinal" statetext="RestaurantTextFinal" ></md-loading>
+    		</div>
+			  <div ng-show="cargaRestaurant">
+		    	Verifica la información de tu Restaurante
+		    		<md-divider layout-margin layout-padding></md-divider>
+		    		<div layout="row" layout-sm="column" layout-xs="column" flex>
+		    			<div layout="row" layout-align="center stretch" flex>
+							<ng-view-photo flex match="restaurante" class="md-avatar"  url="{{restaurant.imagen || 'images/logo.svg'}}" name="{{restaurant.nombre || 'restaurant'}}" width="384" height="216" radius="0"></ng-view-photo>
+		    			</div>
+		    			<div layout="column" flex>
+		    				<span class="md-body-2">Nombre:  <span class="md-body-1">{{restaurant.nombre}}</span></span>
+		    				<span class="md-body-2">Teléfono:  <span class="md-body-1">{{restaurant.telefono}}</span></span>
+		    				<span class="md-body-2">Dirección:  <span class="md-body-1">{{restaurant.direccion}}</span></span>
+		    				<span class="md-body-2">Horario:  <span class="md-body-1">{{restaurant.horario}}</span></span>
+		    				<span class="md-body-2">Tipo de Restaurant:  <span class="md-body-1">{{restaurant.tipoRestaurant | TextToString}}</span></span>
+		    				<span class="md-body-2">Tipo de Cocina:  <span class="md-body-1">{{restaurant.tipoCocina | TextToString}}</span></span>
+		    				<span class="md-body-2">Tipo de Ambiente:  <span class="md-body-1">{{restaurant.tipoAmbiente | TextToString}}</span></span>
+		    				<span class="md-body-2">Medios de Pago:  <span class="md-body-1">{{restaurant.tipoPago | TextToString}}</span></span>
+		    				<span class="md-body-2">Rango de Precios:  <span class="md-body-1">{{restaurant.rangoDePrecios}}</span></span>
+		    				<span class="md-body-2">Facebook:  <span class="md-body-1">{{restaurant.facebook}}</span></span>
+		    				<span class="md-body-2">Twitter:  <span class="md-body-1">{{restaurant.twitter}}</span></span>
+		    				<span class="md-body-2">Instagram:  <span class="md-body-1">{{restaurant.instagram}}</span></span>
+		    				<span class="md-body-2">Web:  <span class="md-body-1">{{restaurant.webSite}}</span></span>
+		    				<span class="md-body-2">Latitud:  <span class="md-body-1">{{restaurant.latitud}}</span></span>
+		    				<span class="md-body-2">Longitud:  <span class="md-body-1">{{restaurant.longitud}}</span></span>
+		    				<span class="md-body-2">Descripción:  <span class="md-body-1">{{restaurant.descripcion}}</span></span>
+		    			</div>
+		    		</div>
+			  </div> -->
+    	</div>
+    </div>
+  </md-contend>
+
+  <!--<div layout="row"  layout-align="center center" class="screemLoading" ng-show="configAllRestaurant">
+  	<div layout="column" layout-align="center center">
+	   <md-progress-circular md-mode="indeterminate" layout="row" layout-align="center center"></md-progress-circular>
+	   <div>
+	   		<span class="md-body-2">Cargando  </span><span class="md-body-2">30%</span>
+	   </div>
+  	</div>
+  </div>-->
+        <!--<md-loading visible="true" progress="'34'" text="'Cargando'" imagen="'images/icons/error.svg'" finally="true" statetext="'Datos cargados satisfactoriamente !!!'" ng-show="configAllRestaurant"></md-loading>-->
+
+        <md-loading visible="true" progress="RestaurantProgress" text="RestaurantText" imagen="RestaurantImagen" finally="RestaurantFinal" statetext="RestaurantTextFinal" ng-show="configAllRestaurant"></md-loading>
+</script>
+<script type="text/ng-template" id="loading.tmpl.html">
+  <div layout="row"  layout-align="center center" class="screemLoading">
+  	<div layout="column" layout-align="center center">
+  		<div ng-show="!visible">
+		   <md-progress-circular md-mode="indeterminate" layout="row" layout-align="center center"></md-progress-circular>
+  		</div>
+  		<div ng-show="visible">
+		  	<div layout="column" layout-align="center center" ng-show="!finally">
+			   <md-progress-circular md-mode="indeterminate" layout="row" layout-align="center center"></md-progress-circular>
+			   <div>
+			   		<span class="md-body-2">{{text}}  </span><span class="md-body-2">{{progress}}%</span>
+			   </div>
+		  	</div>
+		  	<div  layout="column" layout-align="center center" ng-show="finally">
+		  		<img src="{{imagen}}" alt="info" style="width: 16vw; height:18vh;">
+		  		<span class="md-display-1" style="text-align: center; color: #757575;">{{statetext}}</span>
+		  	</div>
+  		</div>
+  	</div>
+  </div>
+	
+</script>
